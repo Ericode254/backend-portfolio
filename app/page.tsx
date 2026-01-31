@@ -307,15 +307,15 @@ export default function Home() {
             />
             <ProjectCard
               name="Study Planner"
-              description="Terminal-based task manager with TUI, local encryption, and git synchronization."
-              techStack={["Rust", "Clap", "Ratatui", "SQLite"]}
-              link="#"
-              onShowArchitecture={() =>
-                setSelectedProjectDiagram({
-                  title: "CLI & Sync Architecture",
-                  type: "cli",
-                })
-              }
+              description="An AI powered flask application that enables students to create personalized study plans based on their courses, goals, and available time. They can also share these study plans with the public."
+              techStack={["Python", "AI", "SQLite"]}
+              link="https://github.com/Ericode254/StudyPlanner.git"
+              // onShowArchitecture={() =>
+              //   setSelectedProjectDiagram({
+              //     title: "Study Planner Architecture",
+              //     type: "microservices",
+              //   })
+              // }
             />
             <ProjectCard
               name="Log Aggregator"
