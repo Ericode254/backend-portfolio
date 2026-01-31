@@ -144,8 +144,9 @@ export default function Home() {
       content: (
         <div className="space-y-2">
           <p>Working on an ecommerce api.</p>
-          <p className="line-through opacity-50">Completing a course for Go</p>
+          <p className="line-through opacity-50">Completing a restful API</p>
           <p>Creating a text editor using the C language.</p>
+          <p>Working on completing a python certified course on Udemy</p>
         </div>
       ),
     },
@@ -347,13 +348,13 @@ export default function Home() {
               description="Chama360 is a modern, full-stack web application designed for chamas (informal savings groups and investment clubs common in Kenya and East Africa). It provides a digital platform for managing contributions, tracking investments, and facilitating communication among members."
               techStack={["Reactjs", "Typescript", "ConvexDB", "PayHero"]}
               link="https://chama360.netlify.app/"
-              // onShowArchitecture={() =>
-              //   setSelectedProjectDiagram({
-              //     title: "Chama360 Architecture",
-              //     type: "default",
-              //     imageSrc: "/diagrams/chama360.png"
-              //   })
-              // }
+              onShowArchitecture={() =>
+                setSelectedProjectDiagram({
+                  title: "Chama360 Architecture",
+                  type: "default",
+                  imageSrc: "/diagrams/chama360.png"
+                })
+              }
             />
           </div>
         </section>
