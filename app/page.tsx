@@ -293,19 +293,20 @@ export default function Home() {
               }
             />
             <ProjectCard
-              name="E-commerce API"
-              description="Microservices architecture handling 10k+ concurrent users. Event-driven order processing."
-              techStack={["Node.js", "RabbitMQ", "PostgreSQL", "Redis"]}
-              link="#"
+              name="Terminal Controlled Blog"
+              description="A blog platform that renders markdown files, i use the terminal to create the posts with a .md extension and then i use a bash script and https from the convex database to push everything directly to the production database and then it beautifully renders on the blog website."
+              techStack={["React.js", "ConvexDB", "Bash"]}
+              link="https://terminalandcoffee.netlify.app/"
               onShowArchitecture={() =>
                 setSelectedProjectDiagram({
-                  title: "Event-Driven Order Flow",
-                  type: "microservices",
+                  title: "Terminal Controlled Blog Architecture",
+                  type: "cli",
+                  imageSrc: "/diagrams/terminalandcoffee.png"
                 })
               }
             />
             <ProjectCard
-              name="Rust CLI Task Manager"
+              name="Study Planner"
               description="Terminal-based task manager with TUI, local encryption, and git synchronization."
               techStack={["Rust", "Clap", "Ratatui", "SQLite"]}
               link="#"
