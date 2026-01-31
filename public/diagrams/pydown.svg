@@ -1,0 +1,91 @@
+<svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg" style="background-color: transparent;">
+  <!-- Definitions for Hand-Drawn Effect -->
+  <defs>
+    <filter id="rough-paper">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3" result="noise" />
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" />
+    </filter>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#1f2937" />
+    </marker>
+    <style>
+      .text { font-family: 'Patrick Hand', 'Virgil', sans-serif; fill: #1f2937; font-size: 14px; }
+      .box { fill: #ffffff; stroke: #1f2937; stroke-width: 2; filter: url(#rough-paper); }
+      .arrow { fill: none; stroke: #1f2937; stroke-width: 2; marker-end: url(#arrowhead); filter: url(#rough-paper); }
+      .sub { font-size: 10px; opacity: 0.7; }
+      .title { font-size: 24px; font-weight: bold; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <!-- Title -->
+  <text x="400" y="30" class="text title">PyDown Architecture</text>
+
+  <!-- Nodes -->
+  
+  <!-- User -->
+  <rect x="50" y="150" width="80" height="60" rx="2" class="box" />
+  <text x="90" y="180" textAnchor="middle" class="text">User</text>
+  <text x="90" y="195" textAnchor="middle" class="text sub">Terminal</text>
+
+  <!-- FZF -->
+  <rect x="180" y="50" width="100" height="60" rx="2" class="box" />
+  <text x="230" y="80" textAnchor="middle" class="text">FZF</text>
+  <text x="230" y="95" textAnchor="middle" class="text sub">Search UI</text>
+
+  <!-- PyDown Controller -->
+  <rect x="180" y="150" width="100" height="100" rx="2" class="box" />
+  <text x="230" y="190" textAnchor="middle" class="text">PyDown</text>
+  <text x="230" y="210" textAnchor="middle" class="text sub">Controller</text>
+
+  <!-- YT-DLP Engine -->
+  <rect x="350" y="150" width="100" height="100" rx="2" class="box" />
+  <text x="400" y="190" textAnchor="middle" class="text">YT-DLP</text>
+  <text x="400" y="210" textAnchor="middle" class="text sub">Engine</text>
+
+  <!-- YouTube API -->
+  <rect x="550" y="50" width="100" height="60" rx="2" class="box" />
+  <text x="600" y="80" textAnchor="middle" class="text">YouTube</text>
+  <text x="600" y="95" textAnchor="middle" class="text sub">Servers</text>
+
+  <!-- Decision Diamond -->
+  <path d="M550,200 L600,160 L650,200 L600,240 Z" class="box" />
+  <text x="600" y="205" textAnchor="middle" class="text" style="font-size: 10px;">Mode?</text>
+
+  <!-- Player -->
+  <rect x="680" y="120" width="80" height="60" rx="2" class="box" />
+  <text x="720" y="150" textAnchor="middle" class="text">MPV/VLC</text>
+  <text x="720" y="165" textAnchor="middle" class="text sub">Player</text>
+
+  <!-- Disk -->
+  <path d="M680,260 v40 c0,10 80,10 80,0 v-40 M680,260 c0,-10 80,-10 80,0 c0,10 -80,10 -80,0" class="box" />
+  <text x="720" y="300" textAnchor="middle" class="text">Disk</text>
+
+  <!-- Connections -->
+  
+  <!-- User -> PyDown -->
+  <path d="M130,180 L180,180" class="arrow" />
+  
+  <!-- PyDown <-> FZF -->
+  <path d="M230,150 L230,110" class="arrow" />
+  <text x="240" y="135" class="text sub">Input</text>
+
+  <!-- PyDown -> Engine -->
+  <path d="M280,200 L350,200" class="arrow" />
+  <text x="315" y="190" textAnchor="middle" class="text sub">Exec</text>
+
+  <!-- Engine <-> YouTube -->
+  <path d="M400,150 L400,80 L550,80" class="arrow" />
+  <text x="475" y="70" textAnchor="middle" class="text sub">Network Request</text>
+
+  <!-- Engine -> Decision -->
+  <path d="M450,200 L550,200" class="arrow" />
+  
+  <!-- Decision -> Player -->
+  <path d="M625,180 L680,150" class="arrow" />
+  <text x="640" y="160" class="text sub">Stream</text>
+
+  <!-- Decision -> Download -->
+  <path d="M625,220 L680,270" class="arrow" />
+  <text x="640" y="260" class="text sub">Download</text>
+
+</svg>
