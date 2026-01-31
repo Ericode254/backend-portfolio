@@ -318,16 +318,16 @@ export default function Home() {
               // }
             />
             <ProjectCard
-              name="Log Aggregator"
-              description="Lightweight log ingestion service. Processes logs asynchronously and provides real-time search."
-              techStack={["Elixir", "Phoenix", "ElasticSearch", "Kafka"]}
-              link="#"
-              onShowArchitecture={() =>
-                setSelectedProjectDiagram({
-                  title: "Log Aggregator Architecture",
-                  type: "logs",
-                })
-              }
+              name="Code Constellation"
+              description="This is a vscode extension that is inspired by Obsidian that graphically visualizes your whole project in the form of nodes"
+              techStack={["HTML", "CSS", "Typescript"]}
+              link="https://github.com/Ericode254/CodeConstellation.git"
+              // onShowArchitecture={() =>
+              //   setSelectedProjectDiagram({
+              //     title: "Log Aggregator Architecture",
+              //     type: "logs",
+              //   })
+              // }
             />
             <ProjectCard
               name="Auth Service"
