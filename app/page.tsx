@@ -320,7 +320,7 @@ export default function Home() {
             <ProjectCard
               name="Code Constellation"
               description="This is a vscode extension that is inspired by Obsidian that graphically visualizes your whole project in the form of nodes"
-              techStack={["HTML", "CSS", "Typescript"]}
+              techStack={["Typescript"]}
               link="https://github.com/Ericode254/CodeConstellation.git"
               // onShowArchitecture={() =>
               //   setSelectedProjectDiagram({
@@ -330,16 +330,30 @@ export default function Home() {
               // }
             />
             <ProjectCard
-              name="Auth Service"
-              description="Centralized authentication service supporting OAuth2, OIDC, and custom JWT flows."
-              techStack={["Go", "Gin", "Redis", "Docker"]}
-              link="#"
+              name="Unimarket Ecommerce API"
+              description="Unimarket is a university-exclusive marketplace where students can buy and sell items safely within their campus community. The platform offers user authentication, product listings, secure transactions, and real-time chat functionality to facilitate seamless interactions between buyers and sellers."
+              techStack={["Javascript", "Express.js", "NeonDB", "Prisma", "Socket.io", "JWT"]}
+              link="https://github.com/chapchap-project/Unimarket.git"
               onShowArchitecture={() =>
                 setSelectedProjectDiagram({
-                  title: "Auth Service Architecture",
-                  type: "auth",
+                  title: "Unimarket Ecommerce API Architecture",
+                  type: "default",
+                  imageSrc: "/diagrams/Unimarket2.png"
                 })
               }
+            />
+            <ProjectCard
+              name="Chama360"
+              description="Chama360 is a modern, full-stack web application designed for chamas (informal savings groups and investment clubs common in Kenya and East Africa). It provides a digital platform for managing contributions, tracking investments, and facilitating communication among members."
+              techStack={["Reactjs", "Typescript", "ConvexDB", "PayHero"]}
+              link="https://chama360.netlify.app/"
+              // onShowArchitecture={() =>
+              //   setSelectedProjectDiagram({
+              //     title: "Chama360 Architecture",
+              //     type: "default",
+              //     imageSrc: "/diagrams/chama360.png"
+              //   })
+              // }
             />
           </div>
         </section>
