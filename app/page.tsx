@@ -8,10 +8,6 @@ import SystemDiagram from "./components/SystemDiagram";
 import ManilaFolder from "./components/ManilaFolder";
 import CaseStudyModal from "./components/CaseStudyModal";
 
-/**
- * Type definition for the supported architecture diagram types.
- * @typedef {("cache" | "microservices" | "cli" | "logs" | "auth" | "pydown" | "default")} DiagramType
- */
 type DiagramType =
   | "default";
 
