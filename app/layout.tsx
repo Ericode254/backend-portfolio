@@ -24,7 +24,7 @@ const patrickHand = Patrick_Hand({
  * Includes SEO optimizations like canonical URLs and OpenGraph images.
  */
 export const metadata: Metadata = {
-  metadataBase: new URL("https://ericobackend.netlify.app"), 
+  metadataBase: new URL("https://ericobackend.netlify.app"),
   title: {
     default: "Erick Jillo | Backend Software Engineer",
     template: "%s | Erick Jillo",
@@ -100,9 +100,9 @@ const jsonLd = {
   "jobTitle": "Backend Software Engineer",
   "knowsAbout": ["Go", "Python", "Javascript", "Typescript", "Distributed Systems", "Cloud Computing", "API Design"],
   "sameAs": [
-    "https://github.com/backend-wizard",
+    "https://github.com/Ericode254",
     "https://linkedin.com/in/erickjillo",
-    "https://twitter.com/erickjillo"
+    "https://twitter.com/erick_jillo"
   ],
   "description": "Senior Backend Engineer building robust APIs and distributed systems."
 };
@@ -146,13 +146,13 @@ export default function RootLayout({
             `,
           }}
         />
-        
+
         {/* SEO: JSON-LD Structured Data */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        
+
         {children}
       </body>
     </html>
