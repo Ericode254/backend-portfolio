@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     default: "Erick Jillo | Backend Software Engineer",
     template: "%s | Erick Jillo",
   },
-  description: "Senior Backend Engineer specializing in distributed systems, Go, Python, Javascript, Typescript and high-performance APIs. View my technical portfolio and architecture case studies.",
+  description: "Backend engineer and startup CTO in Kenya building FinTech and marketplace backends in Python (FastAPI) and Go, with M-Pesa, Paystack and Stellar payment integrations.",
   keywords: [
     "Erick Jillo",
     "Backend Engineer",
@@ -38,8 +38,11 @@ export const metadata: Metadata = {
     "Python Developer",
     "Javascript Developer",
     "Typescript Developer",
-    "Distributed Systems",
-    "Microservices",
+    "FastAPI",
+    "M-Pesa Integration",
+    "Paystack",
+    "Stellar Soroban",
+    "Kenya",
     "API Design",
     "System Architecture"
   ],
@@ -55,7 +58,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Erick Jillo | Backend Software Engineer",
-    description: "Backend engineering portfolio featuring system architecture diagrams and technical case studies.",
+    description: "Backend engineer building payment, marketplace and ISP billing systems in Python, Go and Node.js.",
     url: "https://ericobackend.netlify.app",
     siteName: "Erick Jillo Portfolio",
     type: "website",
@@ -72,8 +75,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Erick Jillo | Backend Software Engineer",
-    description: "Backend engineering portfolio featuring system architecture diagrams and technical case studies.",
-    creator: "@erick_jillo", // Update with your actual handle
+    description: "Backend engineer building payment, marketplace and ISP billing systems in Python, Go and Node.js.",
   },
   robots: {
     index: true,
@@ -98,13 +100,12 @@ const jsonLd = {
   "name": "Erick Jillo",
   "url": "https://ericobackend.netlify.app",
   "jobTitle": "Backend Software Engineer",
-  "knowsAbout": ["Go", "Python", "Javascript", "Typescript", "Distributed Systems", "Cloud Computing", "API Design"],
+  "knowsAbout": ["Python", "FastAPI", "Go", "Node.js", "TypeScript", "Rust", "PostgreSQL", "M-Pesa", "Stellar", "API Design"],
   "sameAs": [
     "https://github.com/Ericode254",
-    "https://linkedin.com/in/erickjillo",
-    "https://twitter.com/erick_jillo"
+    "https://www.linkedin.com/in/ericode254/"
   ],
-  "description": "Senior Backend Engineer building robust APIs and distributed systems."
+  "description": "Backend engineer and startup CTO building FinTech and marketplace backends."
 };
 
 /**

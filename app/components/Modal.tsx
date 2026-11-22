@@ -1,47 +1,71 @@
-import React, { useEffect } from 'react';
-import StickyNote from './StickyNote';
+"use client";
+
+import React, { useEffect, useRef } from "react";
 
 interface ModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    children: React.ReactNode;
-    color?: 'yellow' | 'pink' | 'blue' | 'green';
+  isOpen: boolean;
+  onClose: () => void;
+  /** Accessible name for the dialog. */
+  label: string;
+  children: React.ReactNode;
+  className?: string;
 }
 
-export default function Modal({ isOpen, onClose, children, color = 'yellow' }: ModalProps) {
-    useEffect(() => {
-        const handleEsc = (e: KeyboardEvent) => {
-            if (e.key === 'Escape') onClose();
-        };
-        window.addEventListener('keydown', handleEsc);
-        return () => window.removeEventListener('keydown', handleEsc);
-    }, [onClose]);
+/**
+ * Accessible modal dialog: closes on Escape or backdrop click,
+ * moves focus into the dialog, locks page scroll, and restores focus on close.
+ */
+export default function Modal({ isOpen, onClose, label, children, className = "" }: ModalProps) {
+  const panelRef = useRef<HTMLDivElement>(null);
 
-    if (!isOpen) return null;
+  useEffect(() => {
+    if (!isOpen) return;
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    panelRef.current?.focus();
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+      previouslyFocused?.focus();
+    };
+  }, [isOpen, onClose]);
 
-    return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            {/* Backdrop */}
-            <div
-                className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
-                onClick={onClose}
-            />
+  if (!isOpen) return null;
 
-            {/* Modal Content - Reusing Sticky Note aesthetic but larger */}
-            <div className="relative z-10 max-w-2xl w-full animate-in fade-in zoom-in-95 duration-200">
-                <StickyNote color={color} rotation="rotate-0" className="cursor-default !p-8 md:!p-12 min-h-[300px]">
-                    <button
-                        onClick={onClose}
-                        className="absolute top-4 right-4 p-2 hover:bg-black/10 rounded-full transition-colors"
-                    >
-                        ✕
-                    </button>
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
+      <div
+        ref={panelRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={label}
+        tabIndex={-1}
+        className={`relative z-10 w-full max-h-[90vh] flex flex-col outline-none ${className}`}
+      >
+        {children}
+      </div>
+    </div>
+  );
+}
 
-                    <div className="mt-2">
-                        {children}
-                    </div>
-                </StickyNote>
-            </div>
-        </div>
-    );
+export function CloseButton({ onClick, className = "" }: { onClick: () => void; className?: string }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label="Close"
+      className={`p-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors ${className}`}
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <line x1="18" y1="6" x2="6" y2="18" />
+        <line x1="6" y1="6" x2="18" y2="18" />
+      </svg>
+    </button>
+  );
 }

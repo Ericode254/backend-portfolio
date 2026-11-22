@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Erick Jillo – Resume</title>
+<!-- Source for public/Erick_Jillo_Resume.pdf. Rebuild with: resume/build.sh -->
+<style>
+  @page { size: A4; margin: 8mm 12mm; }
+  * { box-sizing: border-box; }
+  body { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 9.1pt; line-height: 1.26; color: #1a1a1a; margin: 0; }
+  a { color: inherit; text-decoration: none; }
+  h1 { font-size: 21pt; letter-spacing: .04em; margin: 0; }
+  .title { font-size: 10.5pt; font-weight: 600; color: #1d4ed8; margin: 2px 0 4px; }
+  .contact { font-size: 8.8pt; color: #333; }
+  .contact span + span::before { content: " | "; color: #999; }
+  h2 { font-size: 10pt; letter-spacing: .08em; text-transform: uppercase; border-bottom: 1.2px solid #1a1a1a; padding-bottom: 1px; margin: 7px 0 4px; }
+  p { margin: 0; }
+  .row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .org { font-weight: 700; font-size: 10pt; }
+  .date { font-size: 8.8pt; color: #444; white-space: nowrap; }
+  .role { font-style: italic; color: #333; margin-bottom: 2px; }
+  ul { margin: 0 0 4px; padding-left: 15px; }
+  li { margin: 1px 0; }
+  .skills p { margin: 1px 0; display: grid; grid-template-columns: 112px 1fr; }
+  .skills b { font-weight: 700; }
+  .job { margin-bottom: 2px; }
+</style>
+</head>
+<body>
+  <header>
+    <h1>ERICK JILLO</h1>
+    <p class="title">Backend Engineer · Python · Go · Node.js/TypeScript · Payments</p>
+    <p class="contact">
+      <span>Kenya (EAT, UTC+3) · Open to remote</span><span><a href="mailto:jilloerick6@gmail.com">jilloerick6@gmail.com</a></span><span>+254 799 503 165</span><span><a href="https://github.com/Ericode254">github.com/Ericode254</a></span><span><a href="https://www.linkedin.com/in/ericode254/">linkedin.com/in/ericode254</a></span><span><a href="https://ericobackend.netlify.app">ericobackend.netlify.app</a></span>
+    </p>
+  </header>
+
+  <h2>Profile</h2>
+  <p>Self-taught backend engineer and startup CTO who builds and runs production FinTech and marketplace platforms end to end. Builds in
+  Python (FastAPI), Go and Node.js/TypeScript (Express, NestJS), with deep experience in East African payment rails (M-Pesa Daraja, Paystack, PayHero), Stellar/Soroban smart
+  contracts and Linux operations, running three production servers on a self-hosted Headscale/Tailscale network with key-only SSH. Has shipped products used by real customers: a car rental marketplace (200+ users), a campus
+  marketplace app (40+ users) and an ISP billing system (30+ subscribers).</p>
+
+  <h2>Technical Skills</h2>
+  <div class="skills">
+    <p><b>Languages</b> Python, Go, TypeScript, JavaScript (Node.js), Rust, C, Bash</p>
+    <p><b>Backend</b> FastAPI, Express.js, NestJS, Flask, Go net/http, gRPC/Protobuf, REST, Socket.IO, SQLAlchemy, Alembic, Prisma, sqlc, ARQ/Celery</p>
+    <p><b>Data</b> PostgreSQL, MySQL, Redis, ConvexDB</p>
+    <p><b>Payments &amp; Web3</b> M-Pesa Daraja (STK Push), Paystack, PayHero, Stellar, Soroban, USDC</p>
+    <p><b>Infra &amp; Testing</b> Docker, Nginx, GitHub Actions CI/CD, Headscale/Tailscale, Prometheus, Testcontainers, pytest, Jest, Linux, FreeRADIUS, MikroTik</p>
+    <p><b>Frontend</b> React, React Native (Expo)</p>
+  </div>
+
+  <h2>Professional Experience</h2>
+  <div class="job">
+    <div class="row"><span class="org">Ardena: Car Rental Marketplace &amp; Ardena Business</span><span class="date">Feb 2026 – Present</span></div>
+    <p class="role">Chief Technology Officer · Python, FastAPI, Go, PostgreSQL, Redis, Soroban</p>
+    <ul>
+      <li>Lead the FastAPI/PostgreSQL backend of a peer-to-peer car rental marketplace serving 200+ users, covering bookings, host payouts, chauffeurs and Dojah KYC with HMAC-verified webhooks.</li>
+      <li>Built multi-rail payments: M-Pesa Daraja as the primary rail with automatic Paystack and PayHero fallback, STK Push for M-Pesa and Airtel Money, and failed-charge handling.</li>
+      <li>Wrote the design for, and am building, a Go rewrite of the API (net/http, pgx, sqlc, JWT), shipped in chunks covering auth, catalogue, profiles and notifications; 54 test files, race-enabled CI, Testcontainers Postgres tests and Prometheus metrics, checked route by route against the Python API.</li>
+      <li>Delivered Ardena Business, a B2B SaaS for fleet operators with staff invites, invoicing, a 30-day trial and payment wall.</li>
+      <li>Wrote open-source Soroban contracts, live on testnet, that hold rental deposits and damage-waiver funds in USDC (Stellar Instawards).</li>
+      <li>Secured the servers: SSH is reachable only over a self-hosted Headscale/Tailscale network with key-only login; CI/CD deploys join that network with short-lived keys, pin the server host key, and roll back on failure.</li>
+      <li>Moved background jobs into a standalone ARQ/Redis worker and set up a staging environment.</li>
+    </ul>
+  </div>
+  <div class="job">
+    <div class="row"><span class="org">Korva Ventures (formerly Bunifu Capital)</span><span class="date">Feb 2026 – Present</span></div>
+    <p class="role">Backend Software Engineer · Python, FastAPI, gRPC/Protobuf, Paystack, Mailgun, Docker</p>
+    <ul>
+      <li>Built an M-Pesa statement ingestion service that accepts statements by Mailgun inbound email from approved senders and extracts their transaction tables from the PDFs.</li>
+      <li>Migrated the payment service to Paystack: fixed a critical HMAC webhook-signature bug, added server-side transaction verification, custom payment plans and automatic customer creation.</li>
+      <li>Laid the gRPC/Protobuf foundation for the services and built a shared gRPC logging service with a request-logging interceptor and log streaming.</li>
+      <li>Moved service-to-service JWTs from HS256 to RS256 so each service verifies tokens with a public key.</li>
+    </ul>
+  </div>
+
+  <h2>Key Projects</h2>
+  <div class="job">
+    <div class="row"><span class="org">Vendas: Campus Marketplace</span><span class="date">Live on Google Play · vendas.co.ke</span></div>
+    <p class="role">Founder &amp; Lead Engineer · Node.js, Express, Prisma, PostgreSQL, Socket.IO, React Native (Expo)</p>
+    <ul>
+      <li>Launched at Egerton University with 40+ active students; marketplace API has maintained 99.9% uptime.</li>
+      <li>Built Paystack seller payouts and buyer refunds, real-time chat, Firebase push notifications and Google sign-in, plus a React admin dashboard with moderation, real-time support tickets and AI safety checks.</li>
+    </ul>
+  </div>
+  <div class="job">
+    <div class="row"><span class="org">ISP Billing &amp; Hotspot Platform</span><span class="date">Freelance · In Production</span></div>
+    <p class="role">Full-Stack Engineer · TypeScript, Express, Prisma, MySQL, FreeRADIUS, MikroTik, React, Docker</p>
+    <ul>
+      <li>Built PPPoE and hotspot billing on MikroTik, enforced through FreeRADIUS and paid via M-Pesa, for 30+ subscribers.</li>
+      <li>Added M-Pesa callback reconciliation to stop double-crediting, RADIUS-enforced suspension and nightly off-server backups.</li>
+    </ul>
+  </div>
+  <div class="job">
+    <div class="row"><span class="org">Open Source</span><span class="date">github.com/Ericode254</span></div>
+    <ul>
+      <li><b>PassTUI</b> (Rust): terminal UI for the pass password manager with an Argon2id master password, Browserpass integration, CodeQL scanning and attested releases.</li>
+      <li><b>Swift Deliver API</b> (TypeScript, NestJS): JWT/Passport auth with role guards, Prisma, and email plus real-time Socket.IO notifications.</li>
+      <li><b>FluxNote</b> (React, Convex): real-time collaborative editor. Also <b>PyDown</b> and <b>Code Constellation</b>.</li>
+    </ul>
+  </div>
+
+</body>
+</html>

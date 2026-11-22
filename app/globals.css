@@ -12,6 +12,7 @@
   --sticky-green: #bbf7d0;
   
   --card-bg: #ffffff;
+  --paper: #fdfbf7;
   --card-border: #e5e5e5;
 }
 
@@ -35,6 +36,7 @@
   --color-foreground: var(--foreground);
   --color-card: var(--card-bg);
   --color-card-border: var(--card-border);
+  --color-paper: var(--paper);
   
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
