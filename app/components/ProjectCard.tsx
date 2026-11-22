@@ -1,88 +1,100 @@
-import React from 'react';
+import React from "react";
+import type { Project, LinkKind } from "../data/projects";
 
-/**
- * Props for the ProjectCard component.
- */
 interface ProjectCardProps {
-    /** The display name of the project. */
-    name: string;
-    /** A brief description of the project's purpose and architecture. */
-    description: string;
-    /** List of technologies used (e.g., ["Go", "Redis"]). */
-    techStack: string[];
-    /** URL to the source code or live demo. */
-    link?: string;
-    /** 
-     * Optional callback to trigger the Architecture Diagram view. 
-     * If provided, a specific button for this action will be rendered.
-     */
-    onShowArchitecture?: () => void;
+  project: Project;
+  onShowDiagram?: (project: Project) => void;
 }
 
-/**
- * ProjectCard Component.
- * 
- * Displays a single project in a clean "Index Card" style.
- * It emphasizes technical details (tech stack) over visuals.
- * 
- * Features:
- * - Clean typography using Geist Sans.
- * - Tech stack badges.
- * - Optional link to source code.
- * - Optional button to view system architecture diagrams.
- */
-export default function ProjectCard({ name, description, techStack, link, onShowArchitecture }: ProjectCardProps) {
-    return (
-        <div className="bg-card border border-card-border p-6 rounded-lg shadow-sm hover:shadow-md transition-all hover:-translate-y-1 h-full flex flex-col group">
-            {/* Header: Title and ID Badge */}
-            <div className="flex items-start justify-between mb-4">
-                <h3 className="text-xl font-bold text-foreground group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors font-sans">{name}</h3>
-                <span className="text-2xl text-zinc-400 opacity-50">#</span>
-            </div>
+const LINK_STYLES: Record<LinkKind, string> = {
+  live: "bg-blue-600 text-white hover:bg-blue-700",
+  store: "bg-emerald-600 text-white hover:bg-emerald-700",
+  source: "border border-foreground/20 hover:bg-foreground/5",
+  docs: "border border-foreground/20 hover:bg-foreground/5",
+};
 
-            {/* Description Body */}
-            <p className="text-foreground/80 text-sm mb-6 flex-1 font-sans leading-relaxed">
-                {description}
-            </p>
+const LINK_ICONS: Record<LinkKind, string> = {
+  live: "↗",
+  store: "↗",
+  source: "</>",
+  docs: "↗",
+};
 
-            {/* Footer: Tech Stack and Actions */}
-            <div className="mt-auto space-y-4">
-                <div className="flex flex-wrap gap-2">
-                    {techStack.map((tech) => (
-                        <span key={tech} className="text-xs font-mono bg-black/5 dark:bg-white/10 text-foreground/70 px-2 py-1 rounded">
-                            {tech}
-                        </span>
-                    ))}
-                </div>
+/** Project card. Featured projects show highlights; compact ones show a single line. */
+export default function ProjectCard({ project, onShowDiagram }: ProjectCardProps) {
+  const { name, tagline, status, highlights, stack, links, tryIt, privateNote, diagram, featured } = project;
 
-                <div className="flex items-center justify-between pt-2 border-t border-card-border/50">
-                    {/* Render Architecture Button if handler is provided */}
-                    {onShowArchitecture && (
-                         <button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                onShowArchitecture();
-                            }}
-                            className="text-xs font-bold text-orange-600 dark:text-orange-400 hover:underline flex items-center gap-1"
-                            title="View System Design"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-                            System Architecture
-                        </button>
-                    )}
+  return (
+    <article className="bg-card border border-card-border p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow h-full flex flex-col">
+      <div className="flex flex-wrap items-center gap-2 mb-3">
+        <span className="text-xs font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+          {status}
+        </span>
+      </div>
 
-                    {link && (
-                        <a
-                            href={link}
-                            className="inline-flex items-center text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline gap-1 ml-auto"
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            Source
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-                        </a>
-                    )}
-                </div>
-            </div>
+      <h3 className={`${featured ? "text-2xl" : "text-lg"} font-bold text-foreground mb-2`}>{name}</h3>
+      <p className="text-foreground/80 text-sm leading-relaxed mb-4">{tagline}</p>
+
+      {highlights.length > 0 && (
+        <ul className={`text-sm text-foreground/80 space-y-2 mb-5 ${featured ? "" : "text-foreground/70"}`}>
+          {highlights.map((h) => (
+            <li key={h} className="flex gap-2">
+              <span className="text-blue-500 shrink-0" aria-hidden="true">▸</span>
+              <span>{h}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {tryIt && (
+        <div className="mb-5 text-sm">
+          <p className="font-semibold mb-1">Try it</p>
+          <p className="text-foreground/70 mb-2">{tryIt.text}</p>
+          {tryIt.code && (
+            <pre className="bg-zinc-900 text-zinc-100 text-xs font-mono p-3 rounded overflow-x-auto">
+              <code>$ {tryIt.code}</code>
+            </pre>
+          )}
         </div>
-    );
+      )}
+
+      <div className="mt-auto space-y-4">
+        <div className="flex flex-wrap gap-1.5">
+          {stack.map((tech) => (
+            <span key={tech} className="text-xs font-mono bg-black/5 dark:bg-white/10 text-foreground/70 px-2 py-1 rounded">
+              {tech}
+            </span>
+          ))}
+        </div>
+
+        {privateNote && <p className="text-xs text-foreground/60 italic">{privateNote}</p>}
+
+        {(links.length > 0 || (diagram && onShowDiagram)) && (
+          <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-card-border">
+            {links.map((l) => (
+              <a
+                key={l.href}
+                href={l.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-md transition-colors ${LINK_STYLES[l.kind]}`}
+              >
+                <span aria-hidden="true">{LINK_ICONS[l.kind]}</span>
+                {l.label}
+              </a>
+            ))}
+            {diagram && onShowDiagram && (
+              <button
+                type="button"
+                onClick={() => onShowDiagram(project)}
+                className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-md text-orange-700 dark:text-orange-400 hover:bg-orange-500/10 transition-colors"
+              >
+                <span aria-hidden="true">◇</span> Architecture
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+    </article>
+  );
 }

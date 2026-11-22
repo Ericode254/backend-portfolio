@@ -1,550 +1,284 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import StickyNote from "./components/StickyNote";
 import ProjectCard from "./components/ProjectCard";
 import ThemeToggle from "./components/ThemeToggle";
-import SystemDiagram from "./components/SystemDiagram";
 import ManilaFolder from "./components/ManilaFolder";
 import CaseStudyModal from "./components/CaseStudyModal";
+import Modal, { CloseButton } from "./components/Modal";
+import { PROJECTS, type Project } from "./data/projects";
+import { EXPERIENCE, PROFILE, RESUME_PDF } from "./data/resume";
 
-type DiagramType =
-  | "default";
+const STATS = [
+  { value: "200+", label: "users on Ardena, the car rental marketplace I run as CTO" },
+  { value: "40+", label: "students trading on Vendas, my campus marketplace app" },
+  { value: "30+", label: "ISP subscribers billed through my MikroTik + M-Pesa system" },
+  { value: "3", label: "payment providers integrated in production: M-Pesa Daraja, Paystack and PayHero" },
+];
 
-/**
- * Interface representing a Sticky Note's data structure.
- * Explicitly allows all supported colors to prevent type inference issues.
- */
-interface NoteData {
-  id: string;
-  color: "yellow" | "blue" | "pink" | "green";
-  rotation: string;
-  title?: string;
-  content: React.ReactNode;
+const SERVICES = [
+  {
+    title: "Payment integrations",
+    body: "M-Pesa Daraja (STK Push), Paystack and PayHero, with signed webhooks, reconciliation and fallbacks so you don't lose or double-count money.",
+  },
+  {
+    title: "APIs & backends",
+    body: "Python (FastAPI), Go or Node.js/TypeScript (Express, NestJS) on PostgreSQL and Redis, with auth, background workers, tests and documentation.",
+  },
+  {
+    title: "ISP & hotspot billing",
+    body: "PPPoE and pay-as-you-go Wi-Fi on MikroTik with FreeRADIUS, plus a captive portal customers pay through with M-Pesa.",
+  },
+  {
+    title: "Deployment & Linux ops",
+    body: "Key-only SSH over a private Headscale/Tailscale network, Docker and Nginx, CI/CD with staging and rollback, and backups. I run three production servers this way.",
+  },
+];
+
+const NAV = [
+  { href: "#work", label: "Work" },
+  { href: "#experience", label: "Experience" },
+  { href: "#services", label: "Services" },
+  { href: "#contact", label: "Contact" },
+];
+
+function SectionHeading({ id, children }: { id?: string; children: React.ReactNode }) {
+  return (
+    <div className="flex items-center gap-4 mb-10" id={id}>
+      <h2 className="text-3xl md:text-4xl font-bold">{children}</h2>
+      <div className="h-px flex-1 bg-foreground/10" />
+    </div>
+  );
 }
 
-/**
- * The main Home component for the Portfolio.
- *
- * This component orchestrates the entire landing page, managing state for:
- * - Selected Sticky Notes (Hero & Contact)
- * - Architecture Diagrams (Project Cards)
- * - The "Manila Folder" Document Viewer (Resume/Case Studies)
- *
- * It uses a grid layout to simulate a developer's chaotic but organized desk.
- */
 export default function Home() {
-  // State for the currently expanded sticky note (Hero or Contact)
-  const [selectedNote, setSelectedNote] = useState<NoteData | null>(null);
+  const [diagramProject, setDiagramProject] = useState<Project | null>(null);
+  const [isResumeOpen, setIsResumeOpen] = useState(false);
+  const closeDiagram = useCallback(() => setDiagramProject(null), []);
+  const closeResume = useCallback(() => setIsResumeOpen(false), []);
 
-  // State for the active system architecture diagram modal
-  const [selectedProjectDiagram, setSelectedProjectDiagram] = useState<{
-    title: string;
-    type: DiagramType;
-    imageSrc?: string;
-  } | null>(null);
-
-  // State for the Case Study / Resume document viewer
-  const [isCaseStudyOpen, setIsCaseStudyOpen] = useState(false);
-
-  /**
-   * Handles downloading the architecture diagram.
-   * If an image source is provided, it downloads the file.
-   * Otherwise, it serializes the inline SVG and downloads it.
-   */
-  const handleDownloadDiagram = () => {
-    if (!selectedProjectDiagram) return;
-
-    const title = selectedProjectDiagram.title.toLowerCase().replace(/\s+/g, "-");
-
-    if (selectedProjectDiagram.imageSrc) {
-      const link = document.createElement("a");
-      link.href = selectedProjectDiagram.imageSrc;
-      link.download = `${title}.svg`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } else {
-      const modalElement = document.getElementById("architecture-diagram-container");
-      const svgElement = modalElement?.querySelector("svg");
-
-      if (svgElement) {
-        const clonedSvg = svgElement.cloneNode(true) as SVGElement;
-        clonedSvg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-
-        const svgData = new XMLSerializer().serializeToString(clonedSvg);
-        const svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
-        const svgUrl = URL.createObjectURL(svgBlob);
-
-        const downloadLink = document.createElement("a");
-        downloadLink.href = svgUrl;
-        downloadLink.download = `${title}.svg`;
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-        URL.revokeObjectURL(svgUrl);
-      }
-    }
-  };
-
-  /**
-   * Data for the Hero Section Sticky Notes.
-   * Each note contains its visual properties (color, rotation) and content.
-   */
-  const NOTES_DATA: NoteData[] = [
-    {
-      id: "intro",
-      color: "yellow",
-      rotation: "-rotate-2",
-      title: "Hi, I'm Erick!",
-      content: (
-        <div className="space-y-4">
-          <p className="text-xl font-bold">Backend Software Engineer</p>
-          <p>
-            I build the invisible engines that power the web. Specialized in
-            distributed systems, high-concurrency APIs, and robust data
-            architecture and linux system administration.
-          </p>
-          <div className="mt-4 text-sm text-neutral-600 font-mono">
-            Location: The Cloud ☁️
-          </div>
-        </div>
-      ),
-    },
-    {
-      id: "stack",
-      color: "blue",
-      rotation: "rotate-1",
-      title: "Tech Stack",
-      content: (
-        <ul className="space-y-2 text-lg">
-          <li>🚀 Go (Golang)</li>
-          <li>🐍 Python</li>
-          <li>⚡ Node.js / TypeScript / Javascript</li>
-          <li>🐘 PostgreSQL / NeonDB / ConvexDB / SQLite / MySQL & Redis</li>
-          <li>🐳 Docker </li>
-        </ul>
-      ),
-    },
-    {
-      id: "goals",
-      color: "pink",
-      rotation: "-rotate-3",
-      title: "Current Focus",
-      content: (
-        <div className="space-y-2">
-          <p>Working on an ecommerce api.</p>
-          <p className="line-through opacity-50">Completing a restful API</p>
-          <p>Creating a text editor using the C language.</p>
-          <p>Working on completing a python certified course on Udemy</p>
-        </div>
-      ),
-    },
-  ];
-
-  /**
-   * Data for the Contact Section Sticky Note.
-   * This is separated to allow it to be rendered in the footer but opened in the same modal.
-   */
-  const CONTACT_NOTE: NoteData = {
-    id: "contact",
-    color: "green",
-    rotation: "rotate-2",
-    title: "Communication Channels",
-    content: (
-      <div className="space-y-6">
-        <p className="text-xl leading-relaxed">
-          I am currently open to discussing new opportunities, complex backend
-          challenges, or just geeking out over linux or the command line.
-        </p>
-        <div className="space-y-4 font-mono text-lg border-t border-black/10 pt-4">
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">📧</span>
-            <a
-              href="mailto:jilloerick6@gmail.com"
-              className="hover:underline hover:text-blue-600 transition-colors"
-              target="_blank"
-            >
-              jilloerick6@gmail.com
-            </a>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">🐙</span>
-            <a
-              href="https://github.com/Ericode254"
-              className="hover:underline hover:text-blue-600 transition-colors"
-              target="_blank"
-            >
-              github.com/Ericode254
-            </a>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">💼</span>
-            <a
-              href="https://www.linkedin.com/in/ericode254/"
-              className="hover:underline hover:text-blue-600 transition-colors"
-              target="_blank"
-            >
-              linkedin.com/in/ericode254
-            </a>
-          </div>
-        </div>
-      </div>
-    ),
-  };
+  const featured = PROJECTS.filter((p) => p.featured);
+  const more = PROJECTS.filter((p) => !p.featured);
 
   return (
-    <main className="min-h-screen bg-background text-foreground transition-colors duration-300 relative overflow-x-hidden bg-dot-pattern">
-      {/* 
-        Header Section
-        Contains the Logo/Brand and the Theme Toggle.
-      */}
-      <header className="fixed top-0 left-0 right-0 z-40 backdrop-blur-md bg-background/80 border-b border-foreground/5 px-6 py-4 flex justify-between items-center">
-        <div className="flex items-center gap-3">
-          {/* Custom Terminal Icon */}
-          <div className="bg-zinc-900 text-white p-2 rounded-lg shadow-sm">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <polyline points="4 17 10 11 4 5"></polyline>
-              <line x1="12" y1="19" x2="20" y2="19"></line>
+    <main className="min-h-screen bg-background text-foreground relative overflow-x-hidden">
+      <div className="absolute inset-x-0 top-0 h-[900px] bg-dot-pattern pointer-events-none" aria-hidden="true" />
+
+      <header className="fixed top-0 inset-x-0 z-40 backdrop-blur-md bg-background/80 border-b border-foreground/5 px-4 md:px-6 py-3 flex justify-between items-center">
+        <a href="#top" className="flex items-center gap-3">
+          <span className="bg-zinc-900 text-white p-2 rounded-lg shadow-sm" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="4 17 10 11 4 5" />
+              <line x1="12" y1="19" x2="20" y2="19" />
             </svg>
-          </div>
-          <h1 className="text-2xl font-bold tracking-tight font-sans">
+          </span>
+          <span className="text-xl font-bold tracking-tight">
             Erick Jillo <span className="text-blue-500">.dev</span>
-          </h1>
-        </div>
-        <ThemeToggle />
+          </span>
+        </a>
+        <nav className="flex items-center gap-1 md:gap-4 text-sm">
+          {NAV.map((n) => (
+            <a key={n.href} href={n.href} className="hidden md:inline px-2 py-1 text-foreground/70 hover:text-foreground">
+              {n.label}
+            </a>
+          ))}
+          <a href={RESUME_PDF} download className="px-3 py-1.5 rounded-md bg-foreground text-background font-semibold hover:opacity-90">
+            Resume
+          </a>
+          <ThemeToggle />
+        </nav>
       </header>
 
-      <div className="max-w-7xl mx-auto px-6 py-24 md:py-32 space-y-32">
-        {/* 
-          Hero Section 
-          Renders the grid of sticky notes and the manila folder.
-        */}
-        <section className="relative">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 lg:gap-16 max-w-5xl mx-auto">
-            {NOTES_DATA.map((note) => (
-              <div key={note.id} className="flex justify-center">
-                <StickyNote
-                  color={note.color}
-                  rotation={note.rotation}
-                  className="w-full max-w-[320px] cursor-pointer hover:shadow-xl"
-                  onClick={() => setSelectedNote(note)}
-                >
-                  {note.title && (
-                    <h2 className="text-3xl font-bold mb-4">{note.title}</h2>
-                  )}
-                  {note.content}
-                </StickyNote>
-              </div>
+      <div id="top" className="relative max-w-6xl mx-auto px-4 md:px-6 pt-28 md:pt-36 pb-16 space-y-28">
+        {/* Hero */}
+        <section className="grid lg:grid-cols-[1.4fr_1fr] gap-12 items-center">
+          <div>
+            <p className="font-mono text-sm text-blue-600 dark:text-blue-400 mb-4">{PROFILE.title}</p>
+            <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-[1.05] mb-6">
+              I build backends that move real money.
+            </h1>
+            <p className="text-lg text-foreground/75 leading-relaxed mb-6 max-w-2xl">
+              CTO at <strong className="text-foreground">Ardena</strong>, where I run the FastAPI/PostgreSQL platform
+              behind a car rental marketplace with 200+ users. I build backends in Python, Go and Node.js/TypeScript, integrate M-Pesa, Paystack and PayHero,
+              and keep the Linux servers running.
+            </p>
+            <p className="text-sm text-foreground/60 mb-8">
+              {PROFILE.location} · {PROFILE.availability}
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <a href="#work" className="px-5 py-3 rounded-md bg-blue-600 text-white font-semibold hover:bg-blue-700">
+                See my work
+              </a>
+              <a href={RESUME_PDF} download className="px-5 py-3 rounded-md border border-foreground/20 font-semibold hover:bg-foreground/5">
+                Download resume
+              </a>
+              <a href={`mailto:${PROFILE.email}`} className="px-5 py-3 rounded-md border border-foreground/20 font-semibold hover:bg-foreground/5">
+                Email me
+              </a>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-10 justify-items-center">
+            <StickyNote color="blue" rotation="rotate-1" className="w-full max-w-[320px]">
+              <h2 className="font-handwriting text-3xl mb-3">Daily stack</h2>
+              <ul className="space-y-1 text-sm">
+                <li>Python · FastAPI</li>
+                <li>Go · net/http · pgx</li>
+                <li>Node.js · TypeScript · Express · NestJS</li>
+                <li>Rust</li>
+                <li>PostgreSQL · Redis · MySQL</li>
+                <li>Docker · Nginx · GitHub Actions</li>
+              </ul>
+            </StickyNote>
+            <div className="hidden lg:flex w-full justify-center">
+              <ManilaFolder rotation="-rotate-2" title="Resume" subtitle="Open the file" onClick={() => setIsResumeOpen(true)} />
+            </div>
+          </div>
+        </section>
+
+        {/* Impact */}
+        <section aria-label="Impact" className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {STATS.map((s) => (
+            <div key={s.value} className="bg-card border border-card-border rounded-lg p-5">
+              <p className="text-3xl md:text-4xl font-bold text-blue-600 dark:text-blue-400">{s.value}</p>
+              <p className="text-sm text-foreground/70 mt-1 leading-snug">{s.label}</p>
+            </div>
+          ))}
+        </section>
+
+        {/* Featured work */}
+        <section>
+          <SectionHeading id="work">Featured work</SectionHeading>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {featured.map((p) => (
+              <ProjectCard key={p.slug} project={p} onShowDiagram={setDiagramProject} />
             ))}
-
-            {/* The Manila Folder (Resume/Case Studies) */}
-            <div className="flex justify-center items-center">
-              <ManilaFolder
-                title="RESUME & DOCS"
-                rotation="rotate-2"
-                onClick={() => setIsCaseStudyOpen(true)}
-              />
-            </div>
-          </div>
-        </section>
-
-        {/* 
-          Projects Section 
-          Displays selected works in a grid of cards.
-        */}
-        <section className="max-w-6xl mx-auto">
-          <div className="flex items-center gap-4 mb-12">
-            <h2 className="text-4xl font-bold font-sans">Selected Works</h2>
-            <div className="h-px flex-1 bg-foreground/10"></div>
           </div>
 
+          <h3 className="text-2xl font-bold mt-16 mb-6">More projects</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <ProjectCard
-              name="PyDown"
-              description="A simple CLI application created using python that enable users to access youtube from the terminal and play youtube videos directly from the terminal or choose to download any youtube video in any quality with or without subtitle"
-              techStack={["Python", "FZF", "mpv or vlc"]}
-              link="https://github.com/Ericode254/PyDown.git"
-              onShowArchitecture={() =>
-                setSelectedProjectDiagram({
-                  title: "PyDown Architecture",
-                  type: "default",
-                  imageSrc: "/diagrams/pydown.png"
-                })
-              }
-            />
-            <ProjectCard
-              name="Terminal Controlled Blog"
-              description="A blog platform that renders markdown files, i use the terminal to create the posts with a .md extension and then i use a bash script and https from the convex database to push everything directly to the production database and then it beautifully renders on the blog website."
-              techStack={["React.js", "ConvexDB", "Bash"]}
-              link="https://terminalandcoffee.netlify.app/"
-              onShowArchitecture={() =>
-                setSelectedProjectDiagram({
-                  title: "Terminal Controlled Blog Architecture",
-                  type: "default",
-                  imageSrc: "/diagrams/terminalandcoffee.png"
-                })
-              }
-            />
-            <ProjectCard
-              name="Study Planner"
-              description="An AI powered flask application that enables students to create personalized study plans based on their courses, goals, and available time. They can also share these study plans with the public."
-              techStack={["Python", "AI", "SQLite"]}
-              link="https://github.com/Ericode254/StudyPlanner.git"
-              onShowArchitecture={() =>
-                setSelectedProjectDiagram({
-                  title: "Study Planner Architecture",
-                  type: "default",
-                })
-              }
-            />
-            <ProjectCard
-              name="Code Constellation"
-              description="This is a vscode extension that is inspired by Obsidian that graphically visualizes your whole project in the form of nodes"
-              techStack={["Typescript"]}
-              link="https://github.com/Ericode254/CodeConstellation.git"
-              onShowArchitecture={() =>
-                setSelectedProjectDiagram({
-                  title: "Vscode extension",
-                  type: "default",
-                })
-              }
-            />
-            <ProjectCard
-              name="Unimarket Ecommerce API"
-              description="Unimarket is a university-exclusive marketplace where students can buy and sell items safely within their campus community. The platform offers user authentication, product listings, secure transactions, and real-time chat functionality to facilitate seamless interactions between buyers and sellers."
-              techStack={["Javascript", "Express.js", "NeonDB", "Prisma", "Socket.io", "JWT"]}
-              link="https://github.com/chapchap-project/Unimarket.git"
-              onShowArchitecture={() =>
-                setSelectedProjectDiagram({
-                  title: "Unimarket Ecommerce API Architecture",
-                  type: "default",
-                  imageSrc: "/diagrams/Unimarket2.png"
-                })
-              }
-            />
-            <ProjectCard
-              name="Chama360"
-              description="Chama360 is a modern, full-stack web application designed for chamas (informal savings groups and investment clubs common in Kenya and East Africa). It provides a digital platform for managing contributions, tracking investments, and facilitating communication among members."
-              techStack={["Reactjs", "Typescript", "ConvexDB", "PayHero"]}
-              link="https://chama360.netlify.app/"
-              onShowArchitecture={() =>
-                setSelectedProjectDiagram({
-                  title: "Chama360 Architecture",
-                  type: "default",
-                  imageSrc: "/diagrams/chama360.png"
-                })
-              }
-            />
-            <ProjectCard
-              name="Expressjs Api ProjectStructure"
-              description="This is a production ready project structure that is automatically generated by a bash script"
-              techStack={["Bash"]}
-              link="https://github.com/Ericode254/BashScripts.git"
-              onShowArchitecture={() =>
-                setSelectedProjectDiagram({
-                  title: "Expressjs architecture",
-                  type: "default",
-                  imageSrc: "/diagrams/expressjsProjectStructure.png"
-                })
-              }
-            />
-
+            {more.map((p) => (
+              <ProjectCard key={p.slug} project={p} onShowDiagram={setDiagramProject} />
+            ))}
           </div>
         </section>
 
-        {/* 
-          Contact Section
-          Interactive footer sticky note that opens the contact modal.
-        */}
-        <section className="flex flex-col items-center justify-center pb-20">
-          <StickyNote
-            color={CONTACT_NOTE.color}
-            rotation={CONTACT_NOTE.rotation}
-            className="max-w-md text-center cursor-pointer hover:scale-105 transition-transform"
-            onClick={() => setSelectedNote(CONTACT_NOTE)}
-          >
-            <h2 className="text-3xl font-bold mb-6">Let&apos;s Connect!</h2>
-            <div className="space-y-3 text-xl">
-              <p className="mb-4">Click here to open communication channels.</p>
-              <div className="flex justify-center gap-4 text-3xl opacity-80">
-                <span>📧</span>
-                <span>🐙</span>
-                <span>💼</span>
-              </div>
-            </div>
-          </StickyNote>
-
-          <footer className="mt-24 text-foreground/40 text-sm font-mono">
-            © {new Date().getFullYear()} Erick Jillo. All rights reserved.
-          </footer>
+        {/* Experience */}
+        <section>
+          <SectionHeading id="experience">Experience</SectionHeading>
+          <ol className="space-y-8">
+            {EXPERIENCE.map((job) => (
+              <li key={job.company} className="grid md:grid-cols-[220px_1fr] gap-2 md:gap-8">
+                <p className="font-mono text-sm text-foreground/60 pt-1">{job.duration}</p>
+                <div className="border-l-2 border-blue-500/40 pl-5">
+                  <h3 className="text-xl font-bold">{job.role}</h3>
+                  <p className="text-foreground/70 mb-1">{job.company}</p>
+                  <p className="font-mono text-xs text-foreground/50 mb-3">{job.stack}</p>
+                  <ul className="space-y-1.5 text-foreground/80">
+                    {job.points.map((pt) => (
+                      <li key={pt} className="flex gap-2">
+                        <span className="text-blue-500" aria-hidden="true">▸</span>
+                        <span>{pt}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </li>
+            ))}
+          </ol>
+          <div className="mt-10 flex flex-wrap gap-3">
+            <button
+              type="button"
+              onClick={() => setIsResumeOpen(true)}
+              className="px-5 py-2.5 rounded-md border border-foreground/20 font-semibold hover:bg-foreground/5"
+            >
+              Read the full resume
+            </button>
+            <a href={RESUME_PDF} download className="px-5 py-2.5 rounded-md border border-foreground/20 font-semibold hover:bg-foreground/5">
+              Download PDF
+            </a>
+          </div>
         </section>
+
+        {/* Services (for clients) */}
+        <section>
+          <SectionHeading id="services">What I can build for you</SectionHeading>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {SERVICES.map((s, i) => (
+              <StickyNote
+                key={s.title}
+                color={(["yellow", "pink", "green", "blue"] as const)[i]}
+                rotation={["-rotate-1", "rotate-1", "-rotate-2", "rotate-2"][i]}
+              >
+                <h3 className="font-handwriting text-2xl mb-2">{s.title}</h3>
+                <p className="text-sm leading-relaxed">{s.body}</p>
+              </StickyNote>
+            ))}
+          </div>
+        </section>
+
+        {/* Contact */}
+        <section id="contact" className="grid md:grid-cols-2 gap-10 items-center">
+          <div>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Let&apos;s work together</h2>
+            <p className="text-lg text-foreground/75 mb-6">
+              Hiring for a backend role, or need payments, an API or ISP billing built? Email me with what you need.
+            </p>
+            <a href={`mailto:${PROFILE.email}`} className="inline-block px-5 py-3 rounded-md bg-blue-600 text-white font-semibold hover:bg-blue-700">
+              {PROFILE.email}
+            </a>
+          </div>
+          <StickyNote color="green" rotation="rotate-2" className="max-w-sm w-full justify-self-center">
+            <h3 className="font-handwriting text-3xl mb-4">Find me</h3>
+            <ul className="space-y-3 font-mono text-sm">
+              <li>
+                <span className="inline-block w-20 text-neutral-600">Email</span><a className="underline hover:text-blue-700" href={`mailto:${PROFILE.email}`}>{PROFILE.email}</a>
+              </li>
+              <li>
+                <span className="inline-block w-20 text-neutral-600">GitHub</span><a className="underline hover:text-blue-700" href={PROFILE.github} target="_blank" rel="noopener noreferrer">github.com/Ericode254</a>
+              </li>
+              <li>
+                <span className="inline-block w-20 text-neutral-600">LinkedIn</span><a className="underline hover:text-blue-700" href={PROFILE.linkedin} target="_blank" rel="noopener noreferrer">linkedin.com/in/ericode254</a>
+              </li>
+              <li>
+                <span className="inline-block w-20 text-neutral-600">Resume</span><a className="underline hover:text-blue-700" href={RESUME_PDF} download>Resume (PDF)</a>
+              </li>
+            </ul>
+          </StickyNote>
+        </section>
+
+        <footer className="text-center text-foreground/40 text-sm font-mono pt-8">
+          © {new Date().getFullYear()} Erick Jillo
+        </footer>
       </div>
 
-      {/* 
-        Modal Overlay for Sticky Notes
-        Handles the "Zoomed In" view for both Hero notes and the Contact note.
-      */}
-      {selectedNote && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div
-            className="absolute inset-0 bg-background/60 backdrop-blur-sm"
-            onClick={() => setSelectedNote(null)}
-          />
-          <div className="relative z-10 max-w-lg w-full">
-            <StickyNote
-              color={selectedNote.color}
-              rotation="rotate-0"
-              className="p-10! shadow-2xl scale-100 cursor-default"
-            >
-              <button
-                onClick={() => setSelectedNote(null)}
-                className="absolute top-2 right-2 p-2 hover:bg-black/10 rounded-full transition-colors"
-                aria-label="Close"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+      {/* Architecture diagram viewer */}
+      <Modal isOpen={!!diagramProject} onClose={closeDiagram} label={`${diagramProject?.name ?? ""} architecture`} className="max-w-5xl">
+        {diagramProject?.diagram && (
+          <div className="bg-card border border-card-border p-6 rounded-xl shadow-2xl flex flex-col max-h-[90vh]">
+            <div className="flex justify-between items-center gap-4 mb-4 border-b border-foreground/10 pb-4">
+              <h3 className="text-xl font-bold">{diagramProject.name}: architecture</h3>
+              <div className="flex items-center gap-1">
+                <a
+                  href={diagramProject.diagram}
+                  download
+                  className="text-sm px-3 py-1.5 rounded-md hover:bg-foreground/5"
                 >
-                  <line x1="18" y1="6" x2="6" y2="18"></line>
-                  <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-              </button>
-              {selectedNote.title && (
-                <h2 className="text-4xl font-bold mb-6">
-                  {selectedNote.title}
-                </h2>
-              )}
-              <div className="text-xl leading-relaxed">
-                {selectedNote.content}
-              </div>
-            </StickyNote>
-          </div>
-        </div>
-      )}
-
-      {/* 
-        Modal for Architecture Diagrams 
-        Displays the hand-drawn system designs.
-      */}
-      {selectedProjectDiagram && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div
-            className="absolute inset-0 bg-background/80 backdrop-blur-md"
-            onClick={() => setSelectedProjectDiagram(null)}
-          />
-          <div className="relative z-10 max-w-4xl w-full bg-card border border-card-border p-8 rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            <div className="flex justify-between items-center mb-6 border-b border-foreground/10 pb-4">
-              <h3 className="text-2xl font-bold font-sans flex items-center gap-2">
-                <span className="text-orange-500">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <circle cx="12" cy="12" r="3"></circle>
-                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                  </svg>
-                </span>
-                {selectedProjectDiagram.title}
-              </h3>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={handleDownloadDiagram}
-                  className="p-2 hover:bg-foreground/5 rounded-full transition-colors group relative"
-                  title="Download Diagram"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                    <polyline points="7 10 12 15 17 10"></polyline>
-                    <line x1="12" y1="15" x2="12" y2="3"></line>
-                  </svg>
-                </button>
-                <button
-                  onClick={() => setSelectedProjectDiagram(null)}
-                  className="p-2 hover:bg-foreground/5 rounded-full transition-colors"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                  </svg>
-                </button>
+                  ↓ Download
+                </a>
+                <CloseButton onClick={closeDiagram} />
               </div>
             </div>
-
-            <div
-              id="architecture-diagram-container"
-              className="flex-1 overflow-auto bg-background/50 rounded-lg p-4 border border-dashed border-foreground/20 flex items-center justify-center"
-            >
-              {selectedProjectDiagram.imageSrc ? (
-                <img
-                  src={selectedProjectDiagram.imageSrc}
-                  alt={selectedProjectDiagram.title}
-                  className="max-w-full h-auto object-contain"
-                />
-              ) : (
-                <SystemDiagram type={selectedProjectDiagram.type} />
-              )}
+            <div className="flex-1 overflow-auto bg-white rounded-lg p-4 flex items-center justify-center">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={diagramProject.diagram} alt={`${diagramProject.name} architecture diagram`} className="max-w-full h-auto" />
             </div>
-
-            <p className="mt-4 text-center text-sm text-foreground/50 font-mono">
-              * Diagram rendered from Excalidraw design asset.
-            </p>
           </div>
-        </div>
-      )}
+        )}
+      </Modal>
 
-      {/* 
-        Case Study Modal
-        The "Confidential Document" viewer for the Resume and Case Studies.
-      */}
-      <CaseStudyModal
-        isOpen={isCaseStudyOpen}
-        onClose={() => setIsCaseStudyOpen(false)}
-      />
+      <CaseStudyModal isOpen={isResumeOpen} onClose={closeResume} />
     </main>
   );
 }
