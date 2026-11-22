@@ -247,11 +247,24 @@ export const PROJECTS: Project[] = [
   {
     slug: "code-constellation",
     name: "Code Constellation",
-    tagline: "VS Code extension that draws your project as an Obsidian-style graph of nodes.",
-    status: "Open source",
-    highlights: ["Helps you find your way around an unfamiliar codebase."],
-    stack: ["TypeScript", "VS Code API"],
-    links: [{ kind: "source", label: "Source", href: "https://github.com/Ericode254/CodeConstellation" }],
+    tagline: "VS Code extension that shows your project as an interactive, Obsidian-style graph: files are stars, imports are the links between them.",
+    status: "Published on VS Code Marketplace · 33 installs",
+    highlights: [
+      "Force-directed graph built with D3: drag, zoom, search, and click a node to open the file.",
+      "Hover a file to highlight its neighbours and preview its first lines; respects .gitignore.",
+      "Understands TypeScript, JavaScript, Python, Go, Java, Rust, PHP and more.",
+    ],
+    stack: ["TypeScript", "VS Code API", "D3", "force-graph"],
+    links: [
+      {
+        kind: "store",
+        label: "VS Code Marketplace",
+        href: "https://marketplace.visualstudio.com/items?itemName=code-constellation.code-constellation",
+      },
+      { kind: "source", label: "Source", href: "https://github.com/Ericode254/CodeConstellation" },
+    ],
+    tryIt: { text: "Install from the terminal:", code: "code --install-extension code-constellation.code-constellation" },
+    media: { src: "/demos/code-constellation.png", alt: "Code Constellation banner: files drawn as connected stars" },
     featured: false,
   },
   {
