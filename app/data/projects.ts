@@ -32,6 +32,8 @@ export interface Project {
   privateNote?: string;
   /** Path under /public to an architecture diagram. */
   diagram?: string;
+  /** Screenshot or demo GIF shown at the top of the card. */
+  media?: { src: string; alt: string };
   featured: boolean;
 }
 
@@ -168,15 +170,25 @@ export const PROJECTS: Project[] = [
   {
     slug: "passtui",
     name: "PassTUI",
-    tagline: "A keyboard-driven terminal UI for the `pass` password store, written in Rust.",
+    tagline: "A keyboard-driven terminal UI for the pass password store, written in Rust.",
     status: "Open source",
     highlights: [
-      "Argon2id-hashed master password, Browserpass integration, CodeQL scanning and attested releases.",
+      "Works on top of the standard GPG-encrypted pass store: no new vault format, no cloud account, nothing to migrate.",
+      "Master password stored only as a salted Argon2id hash, auto-lock when idle, and a clipboard that clears itself.",
+      "TOTP codes, website recovery codes, a password generator, and history that can restore deleted entries from Git.",
+      "Browser autofill through Browserpass; CI with CodeQL scanning and attested release builds.",
     ],
-    stack: ["Rust", "GnuPG", "TUI"],
+    stack: ["Rust", "Ratatui", "GnuPG", "Argon2id"],
     links: [{ kind: "source", label: "Source", href: "https://github.com/Ericode254/PasswordManager" }],
-    tryIt: { text: "Build it:", code: "cargo build --release && ./target/release/passtui" },
-    featured: false,
+    tryIt: {
+      text: "Install it with Cargo:",
+      code: "cargo install --locked --git https://github.com/Ericode254/PasswordManager passtui",
+    },
+    media: {
+      src: "/demos/passtui.gif",
+      alt: "PassTUI demo: unlocking, searching, revealing a password, TOTP code, recovery codes, adding an entry, history and the quick picker",
+    },
+    featured: true,
   },
   {
     slug: "fluxnote",

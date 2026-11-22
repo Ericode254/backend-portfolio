@@ -22,7 +22,7 @@ const LINK_ICONS: Record<LinkKind, string> = {
 
 /** Project card. Featured projects show highlights; compact ones show a single line. */
 export default function ProjectCard({ project, onShowDiagram }: ProjectCardProps) {
-  const { name, tagline, status, highlights, stack, links, tryIt, privateNote, diagram, featured } = project;
+  const { name, tagline, status, highlights, stack, links, tryIt, privateNote, diagram, media, featured } = project;
 
   return (
     <article className="bg-card border border-card-border p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow h-full flex flex-col">
@@ -34,6 +34,16 @@ export default function ProjectCard({ project, onShowDiagram }: ProjectCardProps
 
       <h3 className={`${featured ? "text-2xl" : "text-lg"} font-bold text-foreground mb-2`}>{name}</h3>
       <p className="text-foreground/80 text-sm leading-relaxed mb-4">{tagline}</p>
+
+      {media && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={media.src}
+          alt={media.alt}
+          loading="lazy"
+          className="w-full rounded-md border border-card-border mb-5 bg-zinc-900"
+        />
+      )}
 
       {highlights.length > 0 && (
         <ul className={`text-sm text-foreground/80 space-y-2 mb-5 ${featured ? "" : "text-foreground/70"}`}>
