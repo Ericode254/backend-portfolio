@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- Source for public/og-image.png (1200x630 link preview). Rebuild with: og/build.sh -->
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;800&family=Geist+Mono:wght@500&family=Patrick+Hand&display=block" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    font-family: "Geist", sans-serif; color: #1a1a1a; position: relative;
+    background-color: #fdfbf7;
+    background-image: radial-gradient(circle, rgba(128,128,128,.25) 1.2px, transparent 1.2px);
+    background-size: 26px 26px;
+  }
+  .left { position: absolute; left: 72px; top: 64px; width: 690px; }
+  .brand { display: flex; align-items: center; gap: 14px; font-weight: 800; font-size: 30px; margin-bottom: 48px; }
+  .brand .icon { width: 48px; height: 48px; border-radius: 10px; background: #18181b; display: grid; place-items: center; }
+  .brand span.dev { color: #3b82f6; }
+  .kicker { font-family: "Geist Mono", monospace; font-size: 22px; color: #2563eb; margin-bottom: 18px; }
+  h1 { font-size: 70px; line-height: 1.02; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 28px; }
+  .facts { display: flex; flex-wrap: wrap; gap: 12px; }
+  .fact { font-size: 21px; font-weight: 600; padding: 10px 16px; border-radius: 10px; background: #fff; border: 1.5px solid #e5e5e5; }
+  .fact b { color: #2563eb; }
+  .url { position: absolute; left: 72px; bottom: 44px; font-family: "Geist Mono", monospace; font-size: 22px; color: #525252; }
+  .note {
+    position: absolute; right: 72px; top: 96px; width: 330px; padding: 30px 30px 26px;
+    background: #bae6fd; transform: rotate(2deg); box-shadow: 4px 14px 28px rgba(0,0,0,.18);
+  }
+  .note::before { content: ""; position: absolute; top: -14px; left: 50%; width: 110px; height: 30px; transform: translateX(-50%) rotate(-2deg); background: rgba(255,255,255,.55); }
+  .note h2 { font-family: "Patrick Hand", cursive; font-weight: 400; font-size: 40px; margin-bottom: 12px; }
+  .note li { list-style: none; font-size: 22px; line-height: 1.55; }
+  .folder { position: absolute; right: 110px; bottom: 40px; width: 270px; height: 130px; transform: rotate(-3deg); }
+  .folder .tab { position: absolute; top: 0; left: 0; width: 40%; height: 24px; background: #d8c68a; border-radius: 8px 8px 0 0; }
+  .folder .body { position: absolute; top: 18px; left: 0; right: 0; bottom: 0; background: #f3e5ab; border: 1.5px solid #d8c68a; border-radius: 0 8px 8px 8px; display: grid; place-items: center; box-shadow: 0 10px 20px rgba(0,0,0,.15); }
+  .folder .label { background: #fff; padding: 10px 22px; font-family: "Geist Mono", monospace; font-weight: 500; letter-spacing: .2em; color: #991b1b; font-size: 22px; transform: rotate(-1deg); }
+</style>
+</head>
+<body>
+  <div class="left">
+    <div class="brand">
+      <div class="icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg></div>
+      Erick Jillo <span class="dev">.dev</span>
+    </div>
+    <p class="kicker">Backend Engineer · Python · Go · Node.js/TS</p>
+    <h1>I build backends that move real money.</h1>
+    <div class="facts">
+      <span class="fact">CTO at Ardena · <b>200+</b> users</span>
+      <span class="fact">M-Pesa · Paystack · PayHero</span>
+    </div>
+  </div>
+  <p class="url">erickjillo.ardena.co.ke</p>
+
+  <div class="note">
+    <h2>Daily stack</h2>
+    <ul>
+      <li>Python · FastAPI</li>
+      <li>Go · pgx · sqlc</li>
+      <li>Node.js · TypeScript</li>
+      <li>PostgreSQL · Redis</li>
+      <li>Docker · Nginx</li>
+    </ul>
+  </div>
+  <div class="folder"><div class="tab"></div><div class="body"><span class="label">RESUME</span></div></div>
+</body>
+</html>

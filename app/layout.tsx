@@ -24,7 +24,7 @@ const patrickHand = Patrick_Hand({
  * Includes SEO optimizations like canonical URLs and OpenGraph images.
  */
 export const metadata: Metadata = {
-  metadataBase: new URL("https://ericobackend.netlify.app"),
+  metadataBase: new URL("https://erickjillo.ardena.co.ke"),
   title: {
     default: "Erick Jillo | Backend Software Engineer",
     template: "%s | Erick Jillo",
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     "API Design",
     "System Architecture"
   ],
-  authors: [{ name: "Erick Jillo", url: "https://ericobackend.netlify.app" }],
+  authors: [{ name: "Erick Jillo", url: "https://erickjillo.ardena.co.ke" }],
   creator: "Erick Jillo",
   publisher: "Erick Jillo",
   alternates: {
@@ -57,25 +57,27 @@ export const metadata: Metadata = {
     apple: "/icon.svg",
   },
   openGraph: {
-    title: "Erick Jillo | Backend Software Engineer",
-    description: "Backend engineer building payment, marketplace and ISP billing systems in Python, Go and Node.js.",
-    url: "https://ericobackend.netlify.app",
+    title: "Erick Jillo | Backend Engineer",
+    description: "CTO at Ardena. I build payment, marketplace and ISP billing backends in Python, Go and Node.js/TypeScript, with M-Pesa, Paystack and PayHero.",
+    url: "https://erickjillo.ardena.co.ke",
     siteName: "Erick Jillo Portfolio",
     type: "website",
     locale: "en_US",
     images: [
       {
-        url: "/og-image.png", // Ensure you add an og-image.png to your public folder for best results
+        url: "/og-image.png",
+        type: "image/png",
         width: 1200,
         height: 630,
-        alt: "Erick Jillo - Backend Engineer Portfolio",
+        alt: "Erick Jillo, Backend Engineer: I build backends that move real money."
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Erick Jillo | Backend Software Engineer",
-    description: "Backend engineer building payment, marketplace and ISP billing systems in Python, Go and Node.js.",
+    title: "Erick Jillo | Backend Engineer",
+    description: "CTO at Ardena. I build payment, marketplace and ISP billing backends in Python, Go and Node.js/TypeScript.",
+    images: ["/og-image.png"],
   },
   robots: {
     index: true,
@@ -98,7 +100,7 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
   "name": "Erick Jillo",
-  "url": "https://ericobackend.netlify.app",
+  "url": "https://erickjillo.ardena.co.ke",
   "jobTitle": "Backend Software Engineer",
   "knowsAbout": ["Python", "FastAPI", "Go", "Node.js", "TypeScript", "Rust", "PostgreSQL", "M-Pesa", "Stellar", "API Design"],
   "sameAs": [

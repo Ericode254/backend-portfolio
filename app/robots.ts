@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: '/private/',
     },
-    sitemap: 'https://ericobackend.netlify.app/sitemap.xml', // Replace with your actual domain
+    sitemap: 'https://erickjillo.ardena.co.ke/sitemap.xml',
   }
 }

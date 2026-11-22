@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://ericobackend.netlify.app'; // Replace with your actual domain when deployed
+  const baseUrl = 'https://erickjillo.ardena.co.ke';
 
   return [
     {
