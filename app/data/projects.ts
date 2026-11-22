@@ -182,10 +182,13 @@ export const PROJECTS: Project[] = [
     slug: "fluxnote",
     name: "FluxNote",
     tagline: "Real-time collaborative markdown editor with live cursors and presence.",
-    status: "Open source",
+    status: "Open source · Live",
     highlights: ["Convex for real-time sync and auth; block-based editing with BlockNote."],
     stack: ["TypeScript", "React", "Convex"],
-    links: [{ kind: "source", label: "Source", href: "https://github.com/Ericode254/FluxNote" }],
+    links: [
+      { kind: "live", label: "Live demo", href: "https://fluxnot3.netlify.app/" },
+      { kind: "source", label: "Source", href: "https://github.com/Ericode254/FluxNote" },
+    ],
     featured: false,
   },
   {
